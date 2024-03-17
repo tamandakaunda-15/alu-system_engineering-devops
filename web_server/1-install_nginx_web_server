@@ -1,22 +1,28 @@
 #!/usr/bin/env bash
 # Installs Nginx with the following configurations:
 #+    Listens on port 80.
-#+    Returns a page containing "Holberton School"
+#+    Returns a page containing "Holberton School" when queried
+#+     at the root with a curl GET request.
 
-# Update package repositories
-sudo apt-get update
+apt-get update
+apt-get install -y nginx
 
-# Install Nginx
-sudo apt-get install nginx -y
+mkdir /etc/nginx/html
+touch /etc/nginx/html/index.html
+echo "Holberton School" > /etc/nginx/html/index.html
 
-# Create index.html file with content "Holberton School"
-echo 'Holberton School' > /var/www/html/index.html
 
-# Restart Nginx service
-sudo service nginx restart
+printf %s "server {
+    listen 80;
+    listen [::]:80 default_server;
+    root   /etc/nginx/html;
+    index  index.html index.htm;
 
-# Verify Nginx is running and returning 200 OK
+    }
+}" > /etc/nginx/sites-available/default
+
+Verify Nginx is running and returning 200 OK
 curl -Is http://localhost | head -1
 
-# Verify Nginx root page contains "Holberton School"
+Verify Nginx root page contains "Holberton School"
 curl -s http://localhost | grep "Holberton School"
