@@ -1,25 +1,38 @@
-#!/usr/bin/env bash
-# Configures an Nginx server so that /redirect_me redirects to another page.
-# The redirection is configured as a "301 Moved Permanently"
+ Update package repositories
+sudo apt-get update
 
-apt-get update
-apt-get install -y nginx
+# Install Nginx
+sudo apt-get install nginx -y
 
-mkdir /etc/nginx/html
-touch /etc/nginx/html/index.html
-echo "Holberton School" > /etc/nginx/html/index.html
-printf %s "server {
+# Create index.html file with content "Holberton School"
+echo 'Holberton School' > /var/www/html/index.html
+
+# Create a configuration file for redirection
+sudo sh -c 'cat > /etc/nginx/sites-available/redirect' << EOF
+server {
     listen 80;
-    listen [::]:80 default_server;
-    root   /etc/nginx/html;
-    index  index.html index.htm;
+    server_name _;
+
+    location /redirect_me {
+        return 301 http://www.example.com;
+    }
 
     location / {
-	try_files \$uri \$uri/ =404;
+        root /var/www/html;
     }
-    location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=7VAI73roXaY&list=PPSV;
-    }
-}" > /etc/nginx/sites-available/default
+}
+EOF
 
-service nginx restart
+# Create symbolic link to enable the new configuration
+sudo ln -s /etc/nginx/sites-available/redirect /etc/nginx/sites-enabled/
+
+# Restart Nginx service
+sudo service nginx restart
+
+# Verify the redirection status code
+redirect_status=$(curl -Is http://localhost/redirect_me | grep "HTTP/1.1 301")
+if [ ! -z "$redirect_status" ]; then
+    echo "Success: /redirect_me returns a 301 status code."
+else
+    echo "Error: /redirect_me does not return a 301 status code."
+fi
