@@ -1,4 +1,21 @@
 #!/usr/bin/env bash
+# Install Nginx web server
+sudo apt-get update
+sudo apt-get install nginx -y
+
+# Create a custom Nginx configuration file for redirection
+echo "server {
+    listen 80;
+    server_name _;
+    return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+}" | sudo tee /etc/nginx/sites-available/redirect_me
+
+# Create a symbolic link to enable the new configuration
+sudo ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+
+# Reload Nginx to apply the changes
+sudo service nginx reload
+=======
  Update package repositories
 sudo apt-get update
 
@@ -37,3 +54,4 @@ if [ ! -z "$redirect_status" ]; then
 else
     echo "Error: /redirect_me does not return a 301 status code."
 fi
+>>>>>>> a73372100383c2952755aea23bf2f50998a432e1
