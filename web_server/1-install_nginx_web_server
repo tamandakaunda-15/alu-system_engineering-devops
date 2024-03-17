@@ -3,20 +3,20 @@
 #+    Listens on port 80.
 #+    Returns a page containing "Holberton School"
 
-Update package repositories
+# Update package repositories
 sudo apt-get update
 
-Install Nginx
+# Install Nginx
 sudo apt-get install nginx -y
 
-Create index.html file with content "Holberton School"
+# Create index.html file with content "Holberton School"
 echo 'Holberton School' > /var/www/html/index.html
 
-Restart Nginx service
+# Restart Nginx service
 sudo service nginx restart
 
-Verify Nginx is running and returning 200 OK
+# Verify Nginx is running and returning 200 OK
 curl -Is http://localhost | head -1
 
-Verify Nginx root page contains "Holberton School"
+# Verify Nginx root page contains "Holberton School"
 curl -s http://localhost | grep "Holberton School"
