@@ -19,11 +19,3 @@ printf %s "server {
 " > /etc/nginx/sites-available/default
 
 service nginx restart
-server {
-    listen 80;
-    server_name _;
-
-    location / {
-        return 200 "Holberton School";
-    }
-}
