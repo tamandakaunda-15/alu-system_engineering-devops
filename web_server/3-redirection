@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
  Update package repositories
 sudo apt-get update
 
